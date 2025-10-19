@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - LearnSpace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 16px 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #60a5fa;
+            border-radius: 50%;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #1e293b;
+        }
+
+        .btn-logout {
+            padding: 8px 20px;
+            background: #60a5fa;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-logout:hover {
+            background: #3b82f6;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            padding: 30px 0;
+            box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 32px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #eff6ff;
+            color: #1e293b;
+            border-left: 3px solid #60a5fa;
+            padding-left: 29px;
+        }
+
+        .sidebar-menu .icon {
+            font-size: 1.1rem;
+        }
+
+        .role-badge {
+            margin: 20px 32px;
+            padding: 8px 12px;
+            background: #fef3c7;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #92400e;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .view-only-badge {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .alert-banner {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+        }
+
+        .alert-text {
+            color: #92400e;
+            font-weight: 500;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.9), rgba(59, 130, 246, 0.9)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400"><rect fill="%23334155" width="1200" height="400"/></svg>');
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            padding: 60px;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .hero-banner p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .view-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .view-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .view-card::before {
+            content: 'VIEW ONLY';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: #1e293b;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .card-description {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 30px;
+        }
+
+        .info-box-title {
+            color: #1e40af;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box-text {
+            color: #1e40af;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .hero-banner {
+                padding: 40px 30px;
+            }
+
+            .hero-banner h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .navbar {
+                padding: 16px 20px;
+            }
+
+            .hero-banner {
+                padding: 30px 20px;
+            }
+
+            .hero-banner h1 {
+                font-size: 1.6rem;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="logo-icon"></div>
+            LearnSpace
+        </div>
+        <div class="navbar-right">
+            <a href="/" class="nav-link">< Home</a>
+            <span class="nav-link">Hi, Student</span>
+            <a href="/login" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="/student" class="active">
+                        <span class="icon">🏠</span> Overview
+                    </a>
+                </li>
+                <li>
+                    <a href="/student/timetable">
+                        <span class="icon">📅</span> Timetable
+                    </a>
+                </li>
+                <li>
+                    <a href="/student/rooms">
+                        <span class="icon">🏢</span> View Rooms
+                    </a>
+                </li>
+                <li>
+                    <a href="/student/notifications">
+                        <span class="icon">🔔</span> Notifications
+                    </a>
+                </li>
+            </ul>
+            <div class="role-badge">
+                Role: student
+                <span class="view-only-badge">VIEW ONLY</span>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="alert-banner">
+                <span class="alert-icon">ℹ️</span>
+                <span class="alert-text">You have view-only access. You cannot make bookings or changes.</span>
+            </div>
+
+            <div class="hero-banner">
+                <h1>Welcome to LearnSpace</h1>
+                <p>View schedules, room availability, and announcements.</p>
+            </div>
+
+            <div class="content-grid">
+                <a href="/student/timetable" class="view-card">
+                    <h3 class="card-title">View Timetable</h3>
+                    <p class="card-description">See your class schedule and today's timetable.</p>
+                </a>
+
+                <a href="/student/rooms" class="view-card">
+                    <h3 class="card-title">Room Availability</h3>
+                    <p class="card-description">Check which rooms are available in real-time.</p>
+                </a>
+
+                <a href="/student/notifications" class="view-card">
+                    <h3 class="card-title">Notifications</h3>
+                    <p class="card-description">Stay updated with latest announcements and notifications.</p>
+                </a>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">
+                    <span>🔒</span>
+                    Student Access Information
+                </div>
+                <div class="info-box-text">
+                    As a student, you have read-only access to the system. You can view timetables, room availability, and notifications, but cannot create bookings or make modifications. For booking requests, please contact your faculty or administrators.
+                </div>
+            </div>
+        </main>
+    </div>
+        <script>
+        const logoutBtn = document.getElementById('logoutBtn');
+                logoutBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        });
+    </script>
+</body>
+</html>

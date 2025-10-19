@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable - LearnSpace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 16px 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #60a5fa;
+            border-radius: 50%;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #1e293b;
+        }
+
+        .btn-logout {
+            padding: 8px 20px;
+            background: #60a5fa;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-logout:hover {
+            background: #3b82f6;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            padding: 30px 0;
+            box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 32px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #eff6ff;
+            color: #1e293b;
+            border-left: 3px solid #60a5fa;
+            padding-left: 29px;
+        }
+
+        .sidebar-menu .icon {
+            font-size: 1.1rem;
+        }
+
+        .role-badge {
+            margin: 20px 32px;
+            padding: 8px 12px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: #1e293b;
+            margin-bottom: 30px;
+        }
+
+        .timetable-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .timetable-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .timetable-table thead {
+            background: #f8fafc;
+        }
+
+        .timetable-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #1e293b;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .timetable-table td {
+            padding: 16px;
+            color: #64748b;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .timetable-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .navbar {
+                padding: 16px 20px;
+            }
+
+            .timetable-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="logo-icon"></div>
+            LearnSpace
+        </div>
+        <div class="navbar-right">
+            <a href="/" class="nav-link">< Home</a>
+            <span class="nav-link">Hi, Student</span>
+            <a href="/login" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="/student">
+                        <span class="icon">🏠</span> Overview
+                    </a>
+                </li>
+                <li>
+                    <a href="/student/rooms">
+                        <span class="icon">🏢</span> View Rooms
+                    </a>
+                </li>
+                <li>
+                    <a href="/student/timetable" class="active">
+                        <span class="icon">📅</span> Timetable
+                    </a>
+                </li>
+                <li>
+                    <a href="/student/notifications">
+                        <span class="icon">🔔</span> Notifications
+                    </a>
+                </li>
+            </ul>
+            <div class="role-badge">Role: student</div>
+        </aside>
+
+        <main class="main-content">
+            <h1 class="page-title">Today's Timetable</h1>
+
+            <div class="timetable-container">
+                <% if (timetable && timetable.length > 0) { %>
+                    <table class="timetable-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Subject</th>
+                                <th>Room</th>
+                                <th>Faculty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% timetable.forEach(entry => { %>
+                                <tr>
+                                    <td><%= entry.timeSlot %></td>
+                                    <td><%= entry.subject %></td>
+                                    <td><%= entry.roomNo %></td>
+                                    <td><%= entry.faculty %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📅</div>
+                        <h3>No Classes Today</h3>
+                        <p>Enjoy your day off!</p>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
+        <script>
+        const logoutBtn = document.getElementById('logoutBtn');
+                logoutBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        });
+    </script>
+</body>
+</html>

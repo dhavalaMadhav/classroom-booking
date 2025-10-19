@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - LearnSpace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 16px 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #60a5fa;
+            border-radius: 50%;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #1e293b;
+        }
+
+        .btn-logout {
+            padding: 8px 20px;
+            background: #60a5fa;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-logout:hover {
+            background: #3b82f6;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            padding: 30px 0;
+            box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 32px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #eff6ff;
+            color: #1e293b;
+            border-left: 3px solid #60a5fa;
+            padding-left: 29px;
+        }
+
+        .sidebar-menu .icon {
+            font-size: 1.1rem;
+        }
+
+        .role-badge {
+            margin: 20px 32px;
+            padding: 8px 12px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: #1e293b;
+            margin-bottom: 30px;
+        }
+
+        .notifications-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-item {
+            padding: 16px;
+            background: #fef9e7;
+            border-left: 4px solid #f59e0b;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            color: #1e293b;
+        }
+
+        .notification-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .navbar {
+                padding: 16px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="logo-icon"></div>
+            LearnSpace
+        </div>
+        <div class="navbar-right">
+            <a href="/" class="nav-link">< Home</a>
+            <span class="nav-link">Hi, Student</span>
+            <a href="/login" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="/student">
+                        <span class="icon">🏠</span> Overview
+                    </a>
+                </li>
+                <li>
+                    <a href="/student/rooms">
+                        <span class="icon">🏢</span> View Rooms
+                    </a>
+                </li>
+                <li>
+                    <a href="/student/timetable">
+                        <span class="icon">📅</span> Timetable
+                    </a>
+                </li>
+                <li>
+                    <a href="/student/notifications" class="active">
+                        <span class="icon">🔔</span> Notifications
+                    </a>
+                </li>
+            </ul>
+            <div class="role-badge">Role: student</div>
+        </aside>
+
+        <main class="main-content">
+            <h1 class="page-title">Notifications</h1>
+
+            <div class="notifications-container">
+                <% if (notifications && notifications.length > 0) { %>
+                    <% notifications.forEach(notification => { %>
+                        <div class="notification-item">
+                            <%= notification.message %>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔔</div>
+                        <h3>No Notifications</h3>
+                        <p>You're all caught up!</p>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
+        <script>
+        const logoutBtn = document.getElementById('logoutBtn');
+                logoutBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        });
+    </script>
+</body>
+</html>

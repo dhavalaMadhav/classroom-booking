@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Booking - LearnSpace</title>
+    
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+            emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
+        })();
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 16px 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #60a5fa;
+            border-radius: 50%;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #1e293b;
+        }
+
+        .btn-logout {
+            padding: 8px 20px;
+            background: #1e293b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-logout:hover {
+            background: #334155;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            padding: 30px 0;
+            box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 14px 32px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #f1f5f9;
+            color: #1e293b;
+            border-left: 3px solid #60a5fa;
+            padding-left: 29px;
+        }
+
+        .role-badge {
+            margin: 20px 32px;
+            padding: 8px 12px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.9), rgba(59, 130, 246, 0.9)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 250"><rect fill="%23334155" width="1200" height="250"/></svg>');
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            padding: 50px;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .hero-banner p {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            color: #1e293b;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            color: #1e293b;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            padding: 12px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #60a5fa;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23334155' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #60a5fa;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: #3b82f6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #60a5fa;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .hero-banner {
+                padding: 40px 30px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .navbar {
+                padding: 16px 20px;
+            }
+
+            .hero-banner {
+                padding: 30px 20px;
+            }
+
+            .hero-banner h1 {
+                font-size: 1.6rem;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="logo-icon"></div>
+            LearnSpace
+        </div>
+        <div class="navbar-right">
+            <a href="/teacher" class="nav-link">< Dashboard</a>
+            <span class="nav-link">Hi, Faculty</span>
+            <a href="/login" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/teacher">Overview</a></li>
+                <li><a href="/teacher/quick-booking" class="active">Quick Booking</a></li>
+                <li><a href="/teacher/requests">My Requests</a></li>
+                <li><a href="/teacher/rooms">Room Status</a></li>
+            </ul>
+            <div class="role-badge">Role: teacher</div>
+        </aside>
+
+        <main class="main-content">
+            <div class="hero-banner">
+                <h1>Quick Booking</h1>
+                <p>Book a classroom or lab in two clicks.</p>
+            </div>
+
+            <div class="form-container">
+                <h2 class="form-title">New Booking</h2>
+
+                <form id="bookingForm" action="/teacher/quick-booking" method="POST">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="facultyName">Faculty Name</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="facultyName" 
+                                name="facultyName"
+                                placeholder="e.g., Dr. Priya" 
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="facultyId">Faculty ID</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="facultyId" 
+                                name="facultyId"
+                                placeholder="e.g., 11831" 
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="block">Block</label>
+                            <select 
+                                class="form-control" 
+                                id="block" 
+                                name="block"
+                                required
+                            >
+                                <option value="">Select Block</option>
+                                <option value="Dharithri">Dharithri</option>
+                                <option value="Main">Main</option>
+                                <option value="Medha">Medha</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="roomNo">Room No</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="roomNo" 
+                                name="roomNo"
+                                placeholder="e.g., A-101" 
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="date">Date</label>
+                            <input 
+                                type="date" 
+                                class="form-control" 
+                                id="date" 
+                                name="date"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="timeSlot">Time Slot</label>
+                            <select 
+                                class="form-control" 
+                                id="timeSlot" 
+                                name="timeSlot"
+                                required
+                            >
+                                <option value="">Select Time Slot</option>
+                                <option value="08:00-09:00">08:00-09:00</option>
+                                <option value="09:00-10:00">09:00-10:00</option>
+                                <option value="10:00-11:00">10:00-11:00</option>
+                                <option value="11:00-12:00">11:00-12:00</option>
+                                <option value="12:00-13:00">12:00-13:00</option>
+                                <option value="13:00-14:00">13:00-14:00</option>
+                                <option value="14:00-15:00">14:00-15:00</option>
+                                <option value="15:00-16:00">15:00-16:00</option>
+                                <option value="16:00-17:00">16:00-17:00</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group form-group-full">
+                            <label class="form-label" for="purpose">Purpose / Subject</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="purpose" 
+                                name="purpose"
+                                placeholder="e.g., Project review" 
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submitBtn">Submit Request</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Sending notification to admin...</p>
+        </div>
+    </div>
+
+    <script>
+        const logoutBtn = document.getElementById('logoutBtn');
+                logoutBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        });
+        // Initialize EmailJS with your public key
+        emailjs.init("Hwl0xGQ7Qz5u2ftlw"); // Replace with your actual public key
+
+        const form = document.getElementById('bookingForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            loadingOverlay.classList.add('active');
+
+            // Get form data
+            const formData = {
+                facultyName: document.getElementById('facultyName').value,
+                facultyId: document.getElementById('facultyId').value,
+                block: document.getElementById('block').value,
+                roomNo: document.getElementById('roomNo').value,
+                date: document.getElementById('date').value,
+                timeSlot: document.getElementById('timeSlot').value,
+                purpose: document.getElementById('purpose').value,
+                admin_email: 'madhavdhavala0@gmail.com'
+            };
+
+            try {
+                // Send email using EmailJS
+                const emailResponse = await emailjs.send(
+                    'service_5wfcc6a',      // Your service ID
+                    'template_hmxybgk',     // Your template ID
+                    {
+                        to_email: formData.admin_email,
+                        faculty_name: formData.facultyName,
+                        faculty_id: formData.facultyId,
+                        block: formData.block,
+                        room_no: formData.roomNo,
+                        date: formData.date,
+                        time_slot: formData.timeSlot,
+                        purpose: formData.purpose,
+                        booking_time: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+                    }
+                );
+
+                console.log('✅ Email sent successfully:', emailResponse);
+
+                // Submit form to server after email is sent
+                form.submit();
+
+            } catch (error) {
+                console.error('❌ Email sending failed:', error);
+                
+                // Still submit the form even if email fails
+                alert('Booking will be created, but email notification failed. Please inform admin manually.');
+                form.submit();
+            }
+        });
+    </script>
+</body>
+</html>

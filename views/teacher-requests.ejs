@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Requests - LearnSpace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 16px 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #60a5fa;
+            border-radius: 50%;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #1e293b;
+        }
+
+        .btn-logout {
+            padding: 8px 20px;
+            background: #1e293b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-logout:hover {
+            background: #334155;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            padding: 30px 0;
+            box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 14px 32px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #f1f5f9;
+            color: #1e293b;
+            border-left: 3px solid #60a5fa;
+            padding-left: 29px;
+        }
+
+        .role-badge {
+            margin: 20px 32px;
+            padding: 8px 12px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.9), rgba(59, 130, 246, 0.9)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400"><rect fill="%23334155" width="1200" height="400"/></svg>');
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            padding: 60px;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .hero-banner p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .requests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .request-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .request-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .room-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-cancelled {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .request-time {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .request-purpose {
+            color: #1e293b;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 6px;
+        }
+
+        .request-purpose strong {
+            color: #60a5fa;
+        }
+
+        .request-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            padding: 8px 20px;
+            background: white;
+            color: #64748b;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #fee2e2;
+            color: #991b1b;
+            border-color: #fecaca;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 12px;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        .btn-new-booking {
+            display: inline-block;
+            padding: 12px 28px;
+            background: #60a5fa;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-new-booking:hover {
+            background: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .hero-banner {
+                padding: 40px 30px;
+            }
+
+            .hero-banner h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .navbar {
+                padding: 16px 20px;
+            }
+
+            .hero-banner {
+                padding: 30px 20px;
+            }
+
+            .hero-banner h1 {
+                font-size: 1.6rem;
+            }
+
+            .requests-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="logo-icon"></div>
+            LearnSpace
+        </div>
+        <div class="navbar-right">
+            <a href="/teacher" class="nav-link">< Dashboard</a>
+            <span class="nav-link">Hi, Faculty</span>
+            <a href="/login" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/teacher">Overview</a></li>
+                <li><a href="/teacher/quick-booking">Quick Booking</a></li>
+                <li><a href="/teacher/requests" class="active">My Requests</a></li>
+                <li><a href="/teacher/rooms">Room Status</a></li>
+            </ul>
+            <div class="role-badge">Role: teacher</div>
+        </aside>
+
+        <main class="main-content">
+            <div class="hero-banner">
+                <h1>My Requests</h1>
+                <p>Track approvals and changes.</p>
+            </div>
+
+            <div class="requests-grid">
+                <% if (bookings && bookings.length > 0) { %>
+                    <% bookings.forEach(booking => { %>
+                        <div class="request-card">
+                            <div class="request-header">
+                                <h3 class="room-name">Room <%= booking.roomNo %></h3>
+                                <span class="status-badge status-<%= booking.status %>">
+                                    <%= booking.status.charAt(0).toUpperCase() + booking.status.slice(1) %>
+                                </span>
+                            </div>
+                            <p class="request-time">
+                                📅 <%= new Date(booking.date).toLocaleDateString('en-IN', { 
+                                    year: 'numeric', 
+                                    month: 'short', 
+                                    day: 'numeric' 
+                                }) %> 
+                                🕐 <%= booking.timeSlot %>
+                            </p>
+                            <div class="request-purpose">
+                                <strong>Purpose:</strong> <%= booking.purpose %>
+                            </div>
+                            <div class="request-actions">
+                                <% if (booking.status === 'pending') { %>
+                                    <form action="/teacher/cancel-booking/<%= booking._id %>" method="POST" style="display: inline;">
+                                        <button type="submit" class="btn-cancel" onclick="return confirm('Are you sure you want to cancel this booking?')">
+                                            Cancel
+                                        </button>
+                                    </form>
+                                <% } else if (booking.status === 'rejected' && booking.rejectionReason) { %>
+                                    <p style="color: #991b1b; font-size: 0.85rem; margin: 0;">
+                                        Reason: <%= booking.rejectionReason %>
+                                    </p>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <h3>No Requests Yet</h3>
+                        <p>You haven't made any booking requests.</p>
+                        <a href="/teacher/quick-booking" class="btn-new-booking">Create New Booking</a>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
+        <script>
+        const logoutBtn = document.getElementById('logoutBtn');
+                logoutBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        });
+    </script>
+</body>
+</html>

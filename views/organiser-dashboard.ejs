@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organiser Dashboard - LearnSpace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 16px 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #60a5fa;
+            border-radius: 50%;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #1e293b;
+        }
+
+        .btn-logout {
+            padding: 8px 20px;
+            background: #1e293b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-logout:hover {
+            background: #334155;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            padding: 30px 0;
+            box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 14px 32px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #f1f5f9;
+            color: #1e293b;
+            border-left: 3px solid #60a5fa;
+            padding-left: 29px;
+        }
+
+        .role-badge {
+            margin: 20px 32px;
+            padding: 8px 12px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.9), rgba(59, 130, 246, 0.9)),
+                        url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=400&fit=crop');
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            padding: 60px;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .hero-banner p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-header {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .hero-banner {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .navbar {
+                padding: 16px 20px;
+            }
+
+            .hero-banner {
+                padding: 30px 20px;
+            }
+
+            .hero-banner h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="logo-icon"></div>
+            LearnSpace
+        </div>
+        <div class="navbar-right">
+            <a href="/" class="nav-link">< Home</a>
+            <span class="nav-link">Hi, Organiser</span>
+            <a href="/login" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="/organiser" class="active">Overview</a></li>
+                <li><a href="/organiser/halls">Manage Halls</a></li>
+                <li><a href="/organiser/events">Event Requests</a></li>
+                <li><a href="/organiser/settings">Settings</a></li>
+            </ul>
+            <div class="role-badge">Role: organiser</div>
+        </aside>
+
+        <main class="main-content">
+            <div class="hero-banner">
+                <h1>Event Management Dashboard</h1>
+                <p>Manage halls and organize events efficiently.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">Total Events</div>
+                    <div class="stat-value"><%= stats.totalEvents %></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">Pending Events</div>
+                    <div class="stat-value"><%= stats.pendingEvents %></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">Approved Events</div>
+                    <div class="stat-value"><%= stats.approvedEvents %></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">Upcoming Events</div>
+                    <div class="stat-value"><%= stats.upcomingEvents %></div>
+                </div>
+            </div>
+        </main>
+    </div>
+        <script>
+        const logoutBtn = document.getElementById('logoutBtn');
+                logoutBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        });
+    </script>
+</body>
+</html>
