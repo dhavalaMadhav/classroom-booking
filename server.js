@@ -17,7 +17,7 @@ const { Booking, User, Room, Block, Timetable, EventBooking } = require('./db/re
 
     // Connect to MongoDB
     connectDB();
-// const password = "admin123";
+// const password = "123456";
 // const pass =  bcrypt.hash(password, 10).then(pass=>{
 //     console.log(pass)
 // });
