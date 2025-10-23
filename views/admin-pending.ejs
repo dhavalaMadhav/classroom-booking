@@ -1,366 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pending Requests - Admin Panel</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f8fafc;
-            min-height: 100vh;
-        }
-
-        .navbar {
-            background: white;
-            padding: 16px 32px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .brand-text {
-            color: #60a5fa;
-        }
-
-        .admin-badge {
-            color: #64748b;
-            font-size: 1rem;
-        }
-
-        .navbar-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: #64748b;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: #1e293b;
-        }
-
-        .btn-logout {
-            padding: 8px 20px;
-            background: #60a5fa;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.3s ease;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-logout:hover {
-            background: #3b82f6;
-        }
-
-        .dashboard-container {
-            display: flex;
-            min-height: calc(100vh - 64px);
-        }
-
-        .sidebar {
-            width: 280px;
-            background: white;
-            padding: 30px 0;
-            box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 5px;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 32px;
-            color: #64748b;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: #eff6ff;
-            color: #1e293b;
-            border-left: 3px solid #60a5fa;
-            padding-left: 29px;
-        }
-
-        .sidebar-menu .icon {
-            font-size: 1.1rem;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 40px;
-        }
-
-        .page-title {
-            font-size: 2rem;
-            color: #1e293b;
-            margin-bottom: 30px;
-        }
-
-        .requests-grid {
-            display: grid;
-            gap: 20px;
-        }
-
-        .request-card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 20px;
-            align-items: start;
-        }
-
-        .request-info {
-            display: grid;
-            gap: 12px;
-        }
-
-        .request-header {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .request-detail {
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-
-        .request-detail strong {
-            color: #1e293b;
-            font-weight: 500;
-        }
-
-        .request-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .btn-approve {
-            padding: 10px 24px;
-            background: #10b981;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-approve:hover {
-            background: #059669;
-            transform: translateY(-1px);
-        }
-
-        .btn-reject {
-            padding: 10px 24px;
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-reject:hover {
-            background: #dc2626;
-            transform: translateY(-1px);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            background: white;
-            border-radius: 12px;
-        }
-
-        .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .empty-state h3 {
-            font-size: 1.5rem;
-            color: #1e293b;
-            margin-bottom: 10px;
-        }
-
-        .empty-state p {
-            color: #64748b;
-        }
-
-        @media (max-width: 1024px) {
-            .dashboard-container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-            }
-
-            .request-card {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pending Requests - Admin Panel</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+.navbar {
+  background: white;
+  padding: 16px 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+.brand-text {
+  color: #60a5fa;
+}
+.admin-badge {
+  color: #64748b;
+  font-size: 1rem;
+}
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.nav-link {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.nav-link:hover {
+  color: #1e293b;
+}
+.btn-logout {
+  padding: 8px 20px;
+  background: #60a5fa;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s ease;
+}
+.btn-logout:hover {
+  background: #3b82f6;
+}
+.dashboard-container {
+  display: flex;
+  min-height: calc(100vh - 64px);
+}
+.sidebar {
+  width: 280px;
+  background: white;
+  padding: 30px 0;
+  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+}
+.sidebar-menu {
+  list-style: none;
+}
+.sidebar-menu li {
+  margin-bottom: 5px;
+}
+.sidebar-menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 32px;
+  color: #64748b;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+  background: #eff6ff;
+  color: #1e293b;
+  border-left: 3px solid #60a5fa;
+  padding-left: 29px;
+}
+.sidebar-menu .icon {
+  font-size: 1.1rem;
+}
+.main-content {
+  flex: 1;
+  padding: 40px;
+}
+.page-title {
+  font-size: 2rem;
+  color: #1e293b;
+  margin-bottom: 20px;
+}
+.requests-grid {
+  display: grid;
+  gap: 20px;
+}
+.request-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+}
+.request-info {
+  display: grid;
+  gap: 12px;
+}
+.request-header {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+.request-detail {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+.request-detail strong {
+  color: #1e293b;
+}
+.request-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.btn-approve {
+  padding: 10px 24px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.btn-approve:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+.btn-reject {
+  padding: 10px 24px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.btn-reject:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+.empty-state-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+</style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <span class="brand-text">LearnSpace</span>
-            <span class="admin-badge">Admin Panel</span>
-        </div>
-        <div class="navbar-right">
-            <a href="/" class="nav-link">< Home</a>
-            <span class="nav-link">Hi, Admin</span>
+<nav class="navbar">
+<div class="navbar-brand">
+<span class="brand-text">LearnSpace</span>
+<span class="admin-badge">Admin Panel</span>
+</div>
+<div class="navbar-right">
+<a href="/" class="nav-link">< Home</a>
 <button id="logoutBtn" class="btn-logout">Log Out</button>
-        </div>
-    </nav>
+</div>
+</nav>
+<div class="dashboard-container">
+<aside class="sidebar">
+<ul class="sidebar-menu">
+<li><a href="/admin"><span class="icon">▦</span> Dashboard</a></li>
+<li><a href="/admin/pending" class="active"><span class="icon">≡</span> Pending Requests</a></li>
+<li><a href="/admin/users"><span class="icon">👥</span> Manage Users</a></li>
+<li><a href="/admin/approved"><span class="icon">✓</span> Approved Requests</a></li>
+<li><a href="/admin/rejected"><span class="icon">✗</span> Rejected Requests</a></li>
+</ul>
+</aside>
+<main class="main-content">
+<h1 class="page-title">Pending Requests</h1>
+<div class="requests-grid">
+<!-- Teachers Requests -->
+<% if (bookings && bookings.length > 0) { %>
+<% bookings.forEach(booking => { %>
+<div class="request-card">
+<div class="request-info">
+<div class="request-header">Room <%= booking.roomNo %></div>
+<div class="request-detail"><strong>Faculty:</strong> <%= booking.facultyName %> (ID: <%= booking.facultyId %>)</div>
+<div class="request-detail"><strong>Date:</strong> <%= new Date(booking.date).toLocaleDateString('en-IN') %></div>
+<div class="request-detail"><strong>Time:</strong> <%= booking.timeSlot %></div>
+<div class="request-detail"><strong>Purpose:</strong> <%= booking.purpose %></div>
+</div>
+<div class="request-actions">
+<form action="/admin/approve-booking/<%= booking._id %>" method="POST" style="display:inline;">
+<button class="btn-approve" type="submit">Approve</button>
+</form>
+<form action="/admin/reject-booking/<%= booking._id %>" method="POST" style="display:inline;">
+<button class="btn-reject" type="submit" onclick="return promptReason(event, this.form)">Reject</button>
+</form>
+</div>
+</div>
+<% }); %>
+<% } else { %>
+<div class="empty-state">
+<div class="empty-state-icon">✓</div>
+<h3>No Pending Requests</h3>
+<p>All requests have been processed.</p>
+</div>
+<% } %>
 
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <ul class="sidebar-menu">
-                <li>
-                    <a href="/admin">
-                        <span class="icon">▦</span> Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="/admin/pending" class="active">
-                        <span class="icon">≡</span> Pending Requests
-                    </a>
-                </li>
-                <li>
-                    <a href="/admin/users">
-                        <span class="icon">👥</span> Manage Users
-                    </a>
-                </li>
-                <li>
-                    <a href="/admin/approved">
-                        <span class="icon">✓</span> Approved Requests
-                    </a>
-                </li>
-                <li>
-                    <a href="/admin/rejected">
-                        <span class="icon">✗</span> Rejected Requests
-                    </a>
-                </li>
-            </ul>
-        </aside>
-
-        <main class="main-content">
-            <h1 class="page-title">Pending Requests</h1>
-
-            <div class="requests-grid">
-                <% if (bookings && bookings.length > 0) { %>
-                    <% bookings.forEach(booking => { %>
-                        <div class="request-card">
-                            <div class="request-info">
-                                <div class="request-header">Room <%= booking.roomNo %></div>
-                                <div class="request-detail">
-                                    <strong>Faculty:</strong> <%= booking.facultyName %> (ID: <%= booking.facultyId %>)
-                                </div>
-                                <div class="request-detail">
-                                    <strong>Date:</strong> <%= new Date(booking.date).toLocaleDateString('en-IN', { 
-                                        year: 'numeric', 
-                                        month: 'long', 
-                                        day: 'numeric' 
-                                    }) %>
-                                </div>
-                                <div class="request-detail">
-                                    <strong>Time:</strong> <%= booking.timeSlot %>
-                                </div>
-                                <div class="request-detail">
-                                    <strong>Purpose:</strong> <%= booking.purpose %>
-                                </div>
-                            </div>
-                            <div class="request-actions">
-                                <form action="/admin/approve-booking/<%= booking._id %>" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn-approve">Approve</button>
-                                </form>
-                                <form action="/admin/reject-booking/<%= booking._id %>" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn-reject" onclick="return promptReason(event, this.form)">Reject</button>
-                                </form>
-                            </div>
-                        </div>
-                    <% }); %>
-                <% } else { %>
-                    <div class="empty-state">
-                        <div class="empty-state-icon">✓</div>
-                        <h3>No Pending Requests</h3>
-                        <p>All requests have been processed.</p>
-                    </div>
-                <% } %>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        const logoutBtn = document.getElementById('logoutBtn');
-                logoutBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to logout?')) {
-                window.location.href = '/logout';
-            }
-        });
-        function promptReason(event, form) {
-            event.preventDefault();
-            const reason = prompt('Enter rejection reason (optional):');
-            
-            // Create hidden input for reason
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'reason';
-            input.value = reason || 'No reason provided';
-            form.appendChild(input);
-            
-            form.submit();
-            return false;
-        }
-    </script>
+<!-- Event Requests (Organiser) -->
+<h1 class="page-title">Event Requests (Organiser)</h1>
+<% if (events && events.length > 0) { %>
+<% events.forEach(event => { %>
+<div class="request-card">
+<div class="request-info">
+<div class="request-header">Event: <%= event.eventName %></div>
+<div class="request-detail"><strong>Organiser:</strong> <%= event.organiserName %> (ID: <%= event.organiserId %>)</div>
+<div class="request-detail"><strong>Hall:</strong> <%= event.hallNo %></div>
+<div class="request-detail"><strong>Date:</strong> <%= new Date(event.eventDate).toLocaleDateString('en-IN') %></div>
+<div class="request-detail"><strong>Time:</strong> <%= event.startTime %> - <%= event.endTime %></div>
+<div class="request-detail"><strong>Type:</strong> <%= event.eventType %></div>
+<div class="request-detail"><strong>Attendees:</strong> <%= event.expectedAttendees %></div>
+<div class="request-detail"><strong>Description:</strong> <%= event.description %></div>
+</div>
+<div class="request-actions">
+<form action="/admin/approve-event/<%= event._id %>" method="POST" style="display:inline;">
+<button class="btn-approve" type="submit">Approve</button>
+</form>
+<form action="/admin/reject-event/<%= event._id %>" method="POST" style="display:inline;">
+<button class="btn-reject" type="submit" onclick="return promptReason(event, this.form)">Reject</button>
+</form>
+</div>
+</div>
+<% }); %>
+<% } else { %>
+<div class="empty-state">
+<div class="empty-state-icon">✓</div>
+<h3>No Pending Event Requests</h3>
+<p>All event requests have been processed.</p>
+</div>
+<% } %>
+</div>
+</main>
+</div>
+<script>
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', function() {
+if (confirm('Are you sure you want to logout?')) {
+fetch('/logout', { method: 'POST' })
+.then(() => window.location.href = '/login')
+.catch(() => alert('Logout failed, please try again.'));
+}
+});
+function promptReason(event, form) {
+event.preventDefault();
+const reason = prompt('Enter rejection reason (optional):');
+const input = document.createElement('input');
+input.type = 'hidden';
+input.name = 'reason';
+input.value = reason || 'No reason provided';
+form.appendChild(input);
+form.submit();
+return false;
+}
+</script>
 </body>
 </html>

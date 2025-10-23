@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 // MongoDB connection string - includes database name at the end
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://madhavdhavala0_db_user:mDGpnbjWOF9Pmlr2@cluster0.dvj6trf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+// const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://madhavdhavala0_db_user:mDGpnbjWOF9Pmlr2@cluster0.dvj6trf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/learnspace_bms';
 
 // Connect to MongoDB
 const connectDB = async () => {

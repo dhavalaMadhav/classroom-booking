@@ -339,20 +339,41 @@ app.post('/teacher/quick-booking',auth, async (req, res) => {
         }
     });
 
-    // Pending Requests
-    app.get('/admin/pending',auth, async (req, res) => {
-        try {
-            const pendingBookings = await Booking.find({ status: 'pending' })
-                .sort({ createdAt: -1 })
-                .lean();
-            
-            console.log(`✅ Found ${pendingBookings.length} pending bookings`);
-            res.render('admin-pending', { bookings: pendingBookings });
-        } catch (error) {
-            console.error('❌ Error fetching pending bookings:', error);
-            res.render('admin-pending', { bookings: [] });
-        }
-    });
+// Admin Pending Requests (Includes Teacher + Organiser Events)
+app.get('/admin/pending', auth, async (req, res) => {
+    try {
+        console.log('📥 Fetching pending requests and events...');
+
+        // Teacher bookings
+        const pendingBookings = await Booking.find({ status: 'pending' })
+            .sort({ createdAt: -1 })
+            .lean();
+
+        // Organiser event bookings
+        const pendingEvents = await EventBooking.find({ status: 'pending' })
+            .sort({ createdAt: -1 })
+            .lean();
+
+        console.log(`✅ Found ${pendingBookings.length} teacher requests, ${pendingEvents.length} event requests`);
+        res.render('admin-pending', { bookings: pendingBookings, events: pendingEvents });
+    } catch (error) {
+        console.error('❌ Error fetching pending data:', error);
+        res.render('admin-pending', { bookings: [], events: [] });
+    }
+});
+
+
+    // Admin view organiser events
+app.get('/admin/events', auth, async (req, res) => {
+    try {
+        const events = await EventBooking.find().sort({ createdAt: -1 }).lean();
+        res.render('admin-events', { events });
+    } catch (error) {
+        console.error('❌ Error loading event requests:', error);
+        res.render('admin-events', { events: [] });
+    }
+});
+
 
     // Approve Booking
     app.post('/admin/approve-booking/:id',auth, async (req, res) => {
@@ -374,6 +395,40 @@ app.post('/teacher/quick-booking',auth, async (req, res) => {
             res.status(500).send('Error approving booking');
         }
     });
+
+    // Approve Event Request
+app.post('/admin/approve-event/:id', auth, async (req, res) => {
+    try {
+        const event = await EventBooking.findById(req.params.id);
+        if (!event) return res.status(404).send('Event not found');
+        event.status = 'approved';
+        event.approvedBy = req.user.name || 'Admin';
+        event.approvalDate = new Date();
+        await event.save();
+        console.log('✅ Event approved');
+        res.redirect('/admin/pending');
+    } catch (error) {
+        console.error('❌ Error approving event:', error);
+        res.status(500).send('Error approving event');
+    }
+});
+
+// Reject Event Request
+app.post('/admin/reject-event/:id', auth, async (req, res) => {
+    try {
+        const event = await EventBooking.findById(req.params.id);
+        if (!event) return res.status(404).send('Event not found');
+        event.status = 'rejected';
+        event.rejectionReason = req.body.reason || 'No reason specified';
+        await event.save();
+        console.log('❌ Event rejected');
+        res.redirect('/admin/pending');
+    } catch (error) {
+        console.error('❌ Error rejecting event:', error);
+        res.status(500).send('Error rejecting event');
+    }
+});
+
 
     // Reject Booking
     app.post('/admin/reject-booking/:id',auth, async (req, res) => {
@@ -633,6 +688,48 @@ app.post('/teacher/quick-booking',auth, async (req, res) => {
     });
 
 // ============== ORGANISER ROUTES ==============
+app.post('/organiser/book-hall', auth, async (req, res) => {
+  try {
+    const {
+      eventName,
+      hallNo,
+      eventDate,
+      startTime,
+      endTime,
+      expectedAttendees,
+      eventType,
+      description
+    } = req.body;
+
+    if (!eventName || !hallNo || !eventDate || !startTime || !endTime || !eventType) {
+      return res.status(400).send('All required fields must be filled');
+    }
+
+    // Optional: check if hall is already booked for that date/time here
+
+    const newBooking = new EventBooking({
+      eventName,
+      organiserName: req.user.name,
+      organiserId: req.user.userId,
+      hallNo,
+      eventDate: new Date(eventDate),
+      startTime,
+      endTime,
+      expectedAttendees,
+      eventType,
+      description,
+      status: 'pending'  // default status
+    });
+
+    await newBooking.save();
+    res.redirect('/organiser/events'); // redirect after successful booking
+
+  } catch (error) {
+    console.error('Error booking hall:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 
 // Organiser Dashboard (Overview)
 app.get('/organiser',auth, async (req, res) => {
@@ -661,94 +758,53 @@ app.get('/organiser',auth, async (req, res) => {
     }
 });
 
+app.get('/organiser/halls', auth, async (req, res) => {
+  try {
+    const halls = await Room.find({ isActive: true, type: { $in: ['auditorium', 'seminar-hall'] } }).lean();
 
-// Manage Halls
-app.get('/organiser/halls',auth, async (req, res) => {
-    try {
-        console.log('📥 Fetching halls for organiser...');
-        
-        // Fetch rooms that are auditoriums or seminar halls
-        const halls = await Room.find({
-            isActive: true,
-            type: { $in: ['auditorium', 'seminar-hall'] }
-        }).sort({ roomNo: 1 }).lean();
-        
-        // Get today's event bookings
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        
-        const todayEvents = await EventBooking.find({
-            eventDate: { $gte: today, $lt: tomorrow },
-            status: { $in: ['approved', 'pending'] }
-        }).lean();
-        
-        // Mark hall status
-        const hallsWithStatus = halls.map(hall => {
-            const bookedEvent = todayEvents.find(event => event.hallNo === hall.roomNo);
-            let status = 'Free';
-            
-            if (bookedEvent) {
-                status = bookedEvent.status === 'approved' ? 'Occupied' : 'Reserved';
-            }
-            
-            return {
-                ...hall,
-                status,
-                currentEvent: bookedEvent ? bookedEvent.eventName : null
-            };
-        });
-        
-        // Create sample halls if none exist
-        if (halls.length === 0) {
-            console.log('⚠️ No halls found. Creating sample data...');
-            const sampleHalls = [
-                { roomNo: 'H-101', block: 'Main', capacity: 150, type: 'seminar-hall', floor: 1 },
-                { roomNo: 'H-102', block: 'Main', capacity: 200, type: 'seminar-hall', floor: 1 },
-                { roomNo: 'H-103', block: 'Medha', capacity: 120, type: 'seminar-hall', floor: 2 },
-                { roomNo: 'H-104', block: 'Medha', capacity: 180, type: 'seminar-hall', floor: 2 },
-                { roomNo: 'H-105', block: 'Dharithri', capacity: 100, type: 'seminar-hall', floor: 1 }
-            ];
-            
-            await Room.insertMany(sampleHalls);
-            const newHalls = await Room.find({
-                isActive: true,
-                type: { $in: ['auditorium', 'seminar-hall'] }
-            }).sort({ roomNo: 1 }).lean();
-            
-            const newHallsWithStatus = newHalls.map(hall => ({
-                ...hall,
-                status: 'Free',
-                currentEvent: null
-            }));
-            
-            console.log(`✅ Created ${newHalls.length} halls`);
-            return res.render('organiser-halls', { halls: newHallsWithStatus });
-        }
-        
-        console.log(`✅ Found ${halls.length} halls`);
-        res.render('organiser-halls', { halls: hallsWithStatus });
-    } catch (error) {
-        console.error('❌ Error fetching halls:', error);
-        res.render('organiser-halls', { halls: [] });
+    // Fetch all approved events for any date
+    const approvedEvents = await EventBooking.find({ status: 'approved' }).lean();
+
+    const hallsWithStatus = halls.map(hall => {
+      const hasApprovedBooking = approvedEvents.some(event => event.hallNo === hall.roomNo);
+      const status = hasApprovedBooking ? 'Occupied' : 'Free';
+      const isApproved = hasApprovedBooking;
+
+      console.log(`Hall ${hall.roomNo}: status=${status}, isApproved=${isApproved}`);
+
+      return {
+        ...hall,
+        status,
+        isApproved
+      };
+    });
+
+    res.render('organiser-halls', { halls: hallsWithStatus });
+  } catch (error) {
+    console.error('Error fetching halls:', error);
+    if (!res.headersSent) {
+      res.render('organiser-halls', { halls: [] });
     }
+  }
 });
 
+
+
 // Event Requests
-app.get('/organiser/events',auth, async (req, res) => {
+app.get('/organiser/events', auth, async (req, res) => {
     try {
-        const events = await EventBooking.find()
-            .sort({ createdAt: -1 })
+        // Fetch approved events only
+        const events = await EventBooking.find({ status: 'approved' })
+            .sort({ eventDate: 1 })
             .lean();
-        
-        console.log(`✅ Found ${events.length} event bookings`);
+
         res.render('organiser-events', { events });
     } catch (error) {
-        console.error('❌ Error fetching events:', error);
+        console.error('❌ Error fetching approved events:', error);
         res.render('organiser-events', { events: [] });
     }
 });
+
 
 // Settings
 app.get('/organiser/settings',auth, (req, res) => {

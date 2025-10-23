@@ -1,258 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Requests - LearnSpace</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f8fafc;
-            min-height: 100vh;
-        }
-
-        .navbar {
-            background: white;
-            padding: 16px 32px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .logo-icon {
-            width: 32px;
-            height: 32px;
-            background: #60a5fa;
-            border-radius: 50%;
-        }
-
-        .navbar-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: #64748b;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: #1e293b;
-        }
-
-        .btn-logout {
-            padding: 8px 20px;
-            background: #1e293b;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.3s ease;
-            text-decoration: none;
-        }
-
-        .btn-logout:hover {
-            background: #334155;
-        }
-
-        .dashboard-container {
-            display: flex;
-            min-height: calc(100vh - 64px);
-        }
-
-        .sidebar {
-            width: 280px;
-            background: white;
-            padding: 30px 0;
-            box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 5px;
-        }
-
-        .sidebar-menu a {
-            display: block;
-            padding: 14px 32px;
-            color: #64748b;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: #f1f5f9;
-            color: #1e293b;
-            border-left: 3px solid #60a5fa;
-            padding-left: 29px;
-        }
-
-        .role-badge {
-            margin: 20px 32px;
-            padding: 8px 12px;
-            background: #f1f5f9;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            color: #64748b;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 40px;
-        }
-
-        .hero-banner {
-            background: linear-gradient(135deg, rgba(96, 165, 250, 0.9), rgba(59, 130, 246, 0.9)),
-                        url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=400&fit=crop');
-            background-size: cover;
-            background-position: center;
-            border-radius: 12px;
-            padding: 50px;
-            color: white;
-            margin-bottom: 30px;
-        }
-
-        .hero-banner h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-
-        .hero-banner p {
-            font-size: 1rem;
-            opacity: 0.95;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            background: white;
-            border-radius: 12px;
-        }
-
-        .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .empty-state h3 {
-            font-size: 1.5rem;
-            color: #1e293b;
-            margin-bottom: 10px;
-        }
-
-        .empty-state p {
-            color: #64748b;
-        }
-
-        @media (max-width: 1024px) {
-            .dashboard-container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-            }
-
-            .hero-banner {
-                padding: 40px 30px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 20px;
-            }
-
-            .navbar {
-                padding: 16px 20px;
-            }
-
-            .hero-banner {
-                padding: 30px 20px;
-            }
-
-            .hero-banner h1 {
-                font-size: 1.6rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Event Requests - LearnSpace</title>
+<style>
+  /* Use your provided CSS exactly */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #f8fafc;
+    min-height: 100vh;
+  }
+  .navbar {
+    background: white;
+    padding: 16px 32px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: #60a5fa;
+    border-radius: 50%;
+  }
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .nav-link {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+  }
+  .nav-link:hover {
+    color: #1e293b;
+  }
+  .btn-logout {
+    padding: 8px 20px;
+    background: #1e293b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+    text-decoration: none;
+  }
+  .btn-logout:hover {
+    background: #334155;
+  }
+  .dashboard-container {
+    display: flex;
+    min-height: calc(100vh - 64px);
+  }
+  .sidebar {
+    width: 280px;
+    background: white;
+    padding: 30px 0;
+    box-shadow: 1px 0 3px rgba(0,0,0,0.05);
+  }
+  .sidebar-menu {
+    list-style:none;
+  }
+  .sidebar-menu li {
+    margin-bottom:5px;
+  }
+  .sidebar-menu a {
+    display:block;
+    padding:14px 32px;
+    color:#64748b;
+    text-decoration:none;
+    transition:all 0.3s ease;
+    font-size:0.95rem;
+  }
+  .sidebar-menu a:hover,
+  .sidebar-menu a.active {
+    background:#f1f5f9;
+    color:#1e293b;
+    border-left:3px solid #60a5fa;
+    padding-left:29px;
+  }
+  .role-badge {
+    margin: 20px 32px;
+    padding: 8px 12px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #64748b;
+  }
+  .main-content {
+    flex:1;
+    padding:40px;
+  }
+  .hero-banner {
+    background: linear-gradient(135deg, rgba(96,165,250,0.9), rgba(59,130,246,0.9)),
+      url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=400&fit=crop');
+    background-size: cover; background-position: center; border-radius: 12px; padding: 50px; color: white; margin-bottom: 30px;
+  }
+  .hero-banner h1 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+  }
+  .hero-banner p {
+    font-size: 1rem; opacity:0.95;
+  }
+  .requests-grid {
+    display: grid; gap: 20px;
+  }
+  .request-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .request-header {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+  .request-detail {
+    color: #64748b;
+    font-size: 0.9rem;
+  }
+  @media (max-width:1024px) {
+    .dashboard-container {
+      flex-direction: column;
+    }
+    .sidebar {
+      width: 100%;
+    }
+  }
+</style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <div class="logo-icon"></div>
-            LearnSpace
-        </div>
-        <div class="navbar-right">
-            <a href="/organiser" class="nav-link">< Dashboard</a>
-            <span class="nav-link">Hi, Organiser</span>
-            <a href="/login" class="btn-logout">Logout</a>
-        </div>
-    </nav>
-
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <ul class="sidebar-menu">
-                <li><a href="/organiser">Overview</a></li>
-                <li><a href="/organiser/halls">Manage Halls</a></li>
-                <li><a href="/organiser/events" class="active">Event Requests</a></li>
-                <li><a href="/organiser/settings">Settings</a></li>
-            </ul>
-            <div class="role-badge">Role: organiser</div>
-        </aside>
-
-        <main class="main-content">
-            <div class="hero-banner">
-                <h1>Event Requests</h1>
-                <p>Review and take action.</p>
-            </div>
-
-            <% if (events && events.length > 0) { %>
-                <p style="background: white; padding: 20px; border-radius: 12px; color: #64748b;">
-                    Found <%= events.length %> event(s). Event management coming soon!
-                </p>
-            <% } else { %>
-                <div class="empty-state">
-                    <div class="empty-state-icon">📅</div>
-                    <h3>No Requests Yet</h3>
-                    <p>Event booking requests will appear here.</p>
-                </div>
-            <% } %>
-        </main>
+<nav class="navbar">
+  <div class="navbar-brand">
+    <div class="logo-icon"></div>
+    LearnSpace
+  </div>
+  <div class="navbar-right">
+    <a href="/organiser" class="nav-link">&lt; Dashboard</a>
+    <span class="nav-link">Hi, Organiser</span>
+    <form action="/logout" method="POST" style="display:inline;">
+      <button class="btn-logout" type="submit">Logout</button>
+    </form>
+  </div>
+</nav>
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="/organiser">Overview</a></li>
+      <li><a href="/organiser/halls">Manage Halls</a></li>
+      <li><a href="/organiser/events" class="active">Event Requests</a></li>
+      <li><a href="/organiser/settings">Settings</a></li>
+    </ul>
+    <div class="role-badge">Role: organiser</div>
+  </aside>
+  <main class="main-content">
+    <div class="hero-banner">
+      <h1>Approved Event Requests</h1>
+      <p>View all your approved event bookings below.</p>
     </div>
-        <script>
-        const logoutBtn = document.getElementById('logoutBtn');
-                logoutBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to logout?')) {
-                window.location.href = '/logout';
-            }
-        });
-    </script>
+    <% if (typeof events !== 'undefined' && events.length > 0) { %>
+      <div class="requests-grid">
+        <% events.forEach(event => { %>
+          <div class="request-card">
+            <div class="request-header"><%= event.eventName %></div>
+            <div class="request-detail"><strong>Hall:</strong> <%= event.hallNo %></div>
+            <div class="request-detail"><strong>Date:</strong> <%= new Date(event.eventDate).toLocaleDateString('en-IN') %></div>
+            <div class="request-detail"><strong>Time:</strong> <%= event.startTime %> - <%= event.endTime %></div>
+            <div class="request-detail"><strong>Type:</strong> <%= event.eventType %></div>
+            <div class="request-detail"><strong>Attendees:</strong> <%= event.expectedAttendees %></div>
+            <div class="request-detail"><strong>Description:</strong> <%= event.description %></div>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-state-icon">📅</div>
+        <h3>No Approved Event Requests</h3>
+        <p>Your approved event bookings will appear here.</p>
+      </div>
+    <% } %>
+  </main>
+</div>
 </body>
 </html>
